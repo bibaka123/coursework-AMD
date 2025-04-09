@@ -22,16 +22,16 @@ router.post('/api/auth/login', async (req, res) => {
     }
 });
 
-router.post('/api/shorten', verifyToken, async (req, res) => {
+router.post('/api/shorten', async (req, res) => {
     try {
         const response = await axios.post(`${process.env.URL_SERVICE_URL}/api/shorten`, req.body);
-        res.json(response.data);
+        res.json({ success: true, shortUrl: response.data.shortUrl });
     } catch (err) {
         res.status(err.response?.status || 500).json({ error: err.response?.data?.error || 'Server error' });
     }
 });
 
-router.get('/:shortId', async (req, res) => {
+router.get('/api/:shortId', async (req, res) => {
     try {
         const response = await axios.get(`${process.env.URL_SERVICE_URL}/${req.params.shortId}`);
         res.redirect(response.request.res.responseUrl); // redirect theo kết quả

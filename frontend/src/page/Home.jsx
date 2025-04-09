@@ -1,7 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "../assets/Home.jpg";
+import axios from "axios";
+import { toast } from 'sonner';
 
 const Home = () => {
+  const [originalUrl, setOriginalUrl] = useState('');
+  const [shortLinks, setShortLinks] = useState([]); 
+
+  useEffect(() => {
+    const storedLinks = JSON.parse(localStorage.getItem('shortLinks')) || [];
+    setShortLinks(storedLinks);
+  }, []);
+
+  const shortenLink = async () => {
+    try {
+      const { data } = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/shorten', { originalUrl });
+
+      if (data.success) {
+        toast.success(`Shortened successfully!`);
+
+        const storedLinks = JSON.parse(localStorage.getItem('shortLinks')) || [];
+
+        const newLink = { originalUrl, shortUrl: data.shortUrl };
+        const updatedLinks = [...storedLinks, newLink];
+
+        localStorage.setItem('shortLinks', JSON.stringify(updatedLinks));
+
+
+        setShortLinks(updatedLinks);
+      } else {
+        toast.error(`Failed to shorten the link.`);
+      }
+    } catch (error) {
+      toast.error(`An error occurred: ${error.message}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-white to-blue-100 flex flex-col items-center px-6">
       <main className="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl py-12">
@@ -14,10 +48,13 @@ const Home = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4 max-w-md">
             <input
               type="text"
+              value={originalUrl}
+              onChange={(e) => setOriginalUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && shortenLink()}
               placeholder="Paste URL to shorten"
               className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
             />
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition flex items-center">
+            <button onClick={() => shortenLink()} className="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition flex items-center">
               Shorten Link
               <span className="ml-2">🔗</span>
             </button>
@@ -33,6 +70,32 @@ const Home = () => {
           />
         </div>
       </main>
+
+      {/* Shortened Links Section */}
+      <section className="py-10 px-6 bg-white w-full">
+        <h2 className="text-2xl font-bold text-center mb-6">Your Shortened Links</h2>
+        <div className="max-w-4xl mx-auto">
+          {shortLinks.length > 0 ? (
+            <ul className="space-y-4">
+              {shortLinks.map((link, index) => (
+                <li key={index} className="flex justify-between items-center bg-gray-100 p-4 rounded-lg shadow">
+                  <span className="text-gray-700">{link.originalUrl}</span>
+                  <a
+                    href={link.shortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline"
+                  >
+                    {link.shortUrl}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-600 text-center">No links shortened yet.</p>
+          )}
+        </div>
+      </section>
 
       {/* Benefits Section */}
       <section className="py-20 px-6 bg-white w-full">
