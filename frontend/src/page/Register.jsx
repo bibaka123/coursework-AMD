@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import axios
 import { PiEyeClosed } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
 
@@ -9,15 +10,29 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState(null); // State to handle errors
+  const [success, setSuccess] = useState(null); // State to handle success messages
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    try {
+      const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/auth/register", {
+        username,
+        email,
+        password,
+      });
+      console.log("Registration successful:", response.data);
+      setSuccess("Registration successful! You can now log in.");
+      setError(null); // Clear any previous errors
+    } catch (err) {
+      console.error("Registration failed:", err.response?.data?.error || err.message);
+      setError(err.response?.data?.error || "An error occurred during registration.");
+      setSuccess(null); // Clear any previous success messages
+    }
   };
 
   return (
@@ -90,6 +105,12 @@ const Register = () => {
               )}
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          {/* Success Message */}
+          {success && <p className="text-green-500 text-sm">{success}</p>}
 
           {/* Register Button */}
           <button
