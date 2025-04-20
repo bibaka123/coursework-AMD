@@ -19,3 +19,19 @@ export const login = async (req, res) => {
         res.status(401).json({ error: err.message });
     }
 };
+
+export const getProfile = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const user = await getProfileService(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

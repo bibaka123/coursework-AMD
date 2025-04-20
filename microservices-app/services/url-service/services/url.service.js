@@ -1,5 +1,6 @@
 import Url from '../models/url.model.js';
 import { nanoid } from 'nanoid';
+import mongoose from 'mongoose';
 
 export const shortenUrl = async (originalUrl, userId) => {
     const shortId = nanoid(6);
@@ -18,4 +19,8 @@ export const getOriginalUrl = async (shortId) => {
     const url = await Url.findOne({ shortId });
     if (!url) throw new Error('Short URL not found');
     return url.originalUrl;
+};
+
+export const userUrl = async (userId) => {
+    return await Url.find({ userId }).select('shortId originalUrl createdAt');
 };

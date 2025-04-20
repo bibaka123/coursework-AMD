@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Image from "../assets/Home.jpg";
 import axios from "axios";
 import { toast } from 'sonner';
+import { jwtDecode } from "jwt-decode";
+import { AppContext } from "../context/AppContext";
 
 const Home = () => {
   const [originalUrl, setOriginalUrl] = useState('');
-  const [shortLinks, setShortLinks] = useState([]); 
+  const [shortLinks, setShortLinks] = useState([]);
+
+  const { token } = useContext(AppContext)
+
+  const userId = jwtDecode(token).id
 
   useEffect(() => {
     const storedLinks = JSON.parse(localStorage.getItem('shortLinks')) || [];
@@ -14,7 +20,7 @@ const Home = () => {
 
   const shortenLink = async () => {
     try {
-      const { data } = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/shorten', { originalUrl });
+      const { data } = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/shorten', { originalUrl, userId });
 
       if (data.success) {
         toast.success(`Shortened successfully!`);

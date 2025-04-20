@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import axios from "axios"; // Import axios
 import { PiEyeClosed } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+    const navigate = useNavigate()
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -17,14 +20,16 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/auth/login", {
+            const { data } = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/auth/login", {
                 email,
                 password,
             });
-            console.log("Login successful:", response.data);
-            setSuccess("Login successful! Redirecting...");
-            setError(null); // Clear any previous errors
-            // Handle successful login (e.g., save token, redirect)
+
+            if (data.success) {
+                localStorage.setItem('token', data.data.token)
+                navigate('/')
+            }
+
         } catch (err) {
             console.error("Login failed:", err.response?.data?.error || err.message);
             setError(err.response?.data?.error || "An error occurred");
