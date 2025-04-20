@@ -11,9 +11,13 @@ const Home = () => {
 
   const { token } = useContext(AppContext)
 
-  const decode = jwtDecode(token)
-  const userId = decode.id
-  
+  let userId = ''
+
+  if (token) {
+    userId = jwtDecode(token).id
+  }
+
+
   useEffect(() => {
     const storedLinks = JSON.parse(localStorage.getItem('shortLinks')) || [];
     setShortLinks(storedLinks);

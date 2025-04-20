@@ -33,6 +33,13 @@ const Navbar = () => {
                     Login
                 </Link>
                 <Link
+                    to="/profile"
+                    className={`pb-1 hover:text-blue-600 cursor-pointer ${location.pathname === "/profile" ? "border-b-2 border-blue-600" : ""
+                        }`}
+                >
+                    Profile
+                </Link>
+                <Link
                     to="/register"
                     className={`pb-1 hover:text-blue-600 cursor-pointer ${location.pathname === "/register" ? "border-b-2 border-blue-600" : ""
                         }`}

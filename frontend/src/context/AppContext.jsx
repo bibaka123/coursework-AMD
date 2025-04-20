@@ -7,7 +7,7 @@ export const AppContext = createContext()
 
 const AppContextProvider = (props) => {
 
-    const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : false)
+    const [token, setToken] = useState()
     const [userData, setUserData] = useState(false)
 
     const loadUserProfileData = async () => {
@@ -29,6 +29,13 @@ const AppContextProvider = (props) => {
         token,
         userData
     }
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token");
+        if (savedToken) {
+            setToken(savedToken);
+        }
+    }, []);
 
     useEffect(() => {
         if (token) {
