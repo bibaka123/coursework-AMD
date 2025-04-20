@@ -26,6 +26,6 @@ export const login = async (email, password) => {
     return { token };
 };
 
-export const getProfile = async (userId) => {
+export const getProfileService = async (userId) => {
     return await User.findById(userId).select('-password'); 
 };

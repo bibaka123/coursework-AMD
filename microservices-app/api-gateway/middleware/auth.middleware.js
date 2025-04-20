@@ -10,6 +10,7 @@ export const verifyToken = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        return res.status(403).json({ error: 'Invalid token' });
+        console.error("Token verification failed:", err);  // Log lỗi chi tiết
+        return res.status(403).json({ error: 'Invalid token', details: err.message });
     }
 };

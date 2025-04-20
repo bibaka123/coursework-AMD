@@ -24,7 +24,7 @@ export const getProfile = async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        const user = await getProfileService(userId);
+        const user = await authService.getProfileService(userId);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

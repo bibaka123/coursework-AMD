@@ -10,24 +10,29 @@ const AppContextProvider = (props) => {
     const [token, setToken] = useState()
     const [userData, setUserData] = useState(false)
 
+
     const loadUserProfileData = async () => {
         try {
-            const { data } = await axios.get(backendUrl + '/api/user/get-profile', { headers: { token } })
+            const { data } = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/auth/get-profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             if (data.success) {
-                setUserData(data.userData)
-
+                setUserData(data.data.data);
             } else {
-                toast.error(data.message)
+                toast.error(data.message);
             }
-
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
-    }
+    };
 
     const value = {
         token,
-        userData
+        userData,
+        setToken,
+        setUserData,
     }
 
     useEffect(() => {

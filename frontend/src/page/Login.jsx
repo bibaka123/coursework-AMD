@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios"; // Import axios
 import { PiEyeClosed } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Login = () => {
 
@@ -13,6 +14,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null); // State to handle errors
     const [success, setSuccess] = useState(null); // State to handle success messages
+    const {setToken} = useContext(AppContext); // State to handle token}]
 
     const handleGoogleLogin = () => {
         console.log("Google login clicked");
@@ -25,8 +27,9 @@ const Login = () => {
                 password,
             });
 
-            if (data.success) {
+            if (data.success ) {
                 localStorage.setItem('token', data.data.token)
+                setToken(data.data.token)
                 navigate('/')
             }
 
