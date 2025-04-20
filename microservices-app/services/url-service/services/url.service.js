@@ -21,6 +21,6 @@ export const getOriginalUrl = async (shortId) => {
     return url.originalUrl;
 };
 
-export const userUrl = async (userId) => {
+export const userUrlService = async (userId) => {
     return await Url.find({ userId }).select('shortId originalUrl createdAt');
 };

@@ -49,7 +49,7 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link className="text-gray-700 font-semibold" to="/profile">
+            <Link className={`pb-1 hover:text-blue-600 cursor-pointer ${location.pathname === "/profile" ? "border-b-2 border-blue-600" : ""}`} to="/profile">
               👋 {userData?.email || "User"}
             </Link>
             <button

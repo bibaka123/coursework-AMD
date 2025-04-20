@@ -26,7 +26,7 @@ export const userUrl = async (req, res) => {
         const userId = req.params.userId;
 
         // Gọi service để lấy URLs của user
-        const urls = await userUrlService(userId);
+        const urls = await urlService.userUrlService(userId);
 
         if (!urls || urls.length === 0) {
             return res.status(404).json({ error: 'No URLs found for this user.' });
