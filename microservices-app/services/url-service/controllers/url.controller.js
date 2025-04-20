@@ -2,8 +2,8 @@ import * as urlService from '../services/url.service.js';
 
 export const createShortUrl = async (req, res) => {
     try {
-        const { originalUrl } = req.body;
-        const shortId = await urlService.shortenUrl(originalUrl);
+        const { originalUrl, userId } = req.body;
+        const shortId = await urlService.shortenUrl(originalUrl, userId);
         const shortUrl = `${process.env.BASE_URL}/${shortId}`;
         res.json({ shortUrl });
     } catch (err) {

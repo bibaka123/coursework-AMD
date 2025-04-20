@@ -1,9 +1,15 @@
 import Url from '../models/url.model.js';
 import { nanoid } from 'nanoid';
 
-export const shortenUrl = async (originalUrl) => {
-    const shortId = nanoid(6); // Tạo mã ngắn 6 ký tự
-    const newUrl = new Url({ originalUrl, shortId });
+export const shortenUrl = async (originalUrl, userId) => {
+    const shortId = nanoid(6);
+
+    const urlData = { originalUrl, shortId };
+    if (userId && mongoose.Types.ObjectId.isValid(userId)) {
+        urlData.userId = userId;
+    }
+
+    const newUrl = new Url(urlData);
     await newUrl.save();
     return shortId;
 };
